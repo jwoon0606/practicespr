@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+</head>
+<body>
+    유저 상세정보<br/><br/>
+
+    id : <input id="detail_user_id"/><br/>
+    username : <input id="detail_user_username"/><br/>
+    name : <input id="detail_user_name"/><br/>
+    nick : <input id="detail_user_nick"/><br/>
+    phone : <input id="detail_user_phone"/><br/>
+
+    <button onclick="update_user()">수정</button>
+    <button onclick="delete_user()">삭제</button>
+
+    <script>
+
+        let tempUrl = window.location.href;
+        let tempId = tempUrl.substring(tempUrl.lastIndexOf("/") + 1);
+        let arrayTempId = tempId.split("?");
+        if(arrayTempId.length > 1) {
+            tempId = arrayTempId[0];
+        }
+
+        $(document).ready(function() {
+            detail_user();
+        });
+
+        function detail_user() {
+            let _param = {
+                id : tempId
+            };
+
+            $.ajax({
+                url: "/api/user",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: { id : tempId},
+                cache: false,
+                success: (obj_data, status, xhr)=>{
+                    alert(JSON.stringify(obj_data));
+
+                    let arrayKey = Object.keys(obj_data);
+                    for(let each of arrayKey) {
+                        $("#detail_user_" + each).val(obj_data[each]);
+                    }
+                },
+                error: (obj_data, status, xhr)=>{
+                    alert("error!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
+
+        function update_user() {
+            let _param = {
+
+            };
+
+            let arrayKey = ["id","username", "name", "nick", "phone"];
+            for(let each of arrayKey) {
+                _param[each] = $("#detail_user_" + each).val();
+            }
+
+            $.ajax({
+                url: "/api/user",
+                type: "PUT",
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(_param),
+                cache: false,
+                success: (obj_data, status, xhr)=>{
+                    alert(JSON.stringify(obj_data));
+                },
+                error: (obj_data, status, xhr)=>{
+                    alert("error!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
+
+        function delete_user() {
+            let id = $("#detail_user_id").val();
+
+            $.ajax({
+                url: "/api/user",
+                type: "DELETE",
+                contentType: 'application/json; charset=utf-8',
+                data: id,
+                cache: false,
+                success: (obj_data,status,xhr)=>{
+                    alert(JSON.stringify(obj_data));
+                },
+                error: (obj_data, status, xhr)=>{
+                    alert("error!");
+                    alert(JSON.stringify(obj_data));
+                }
+            });
+        }
+    </script>
+</body>
+</html>

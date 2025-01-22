@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+<body>
+    유저 리스트
+
+    <div id="div_user_list"></div>
+    <script>
+        function list_user() {
+            let _param = {};
+
+            $.ajax({
+                url: "/api/user/list",
+                type: "GET",
+                contentType: 'application/json; charset=utf-8',
+                data: _param,
+                cache: false,
+                success: (obj_data, status, xhr)=>{
+                    alert(JSON.stringify(obj_data));
+
+                    $("#div_user_list").html("");
+                    let userList = obj_data;
+                    for(let each of userList) {
+                        $("#div_user_list").append(
+                            "<div><a href='/user/detail/" + each.id + "'>" + each.id+". " + each.username + " || "+ each.phone + "</a></div>"
+                        )
+                    }
+                },
+                error: (obj_data, status, xhr)=>{
+                    alert("error!");
+                    alert(JSON.stringify(obj_data));
+                }
+            })
+        }
+
+        list_user();
+    </script>
+</body>
+</html>

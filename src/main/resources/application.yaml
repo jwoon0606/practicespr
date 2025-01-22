@@ -10,10 +10,9 @@ logging:
 spring:
   #
   datasource:
-    url: jdbc:mysql://www.adapter-gwangalli.com:3306/scwinterspr01?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+    url: jdbc:mysql://localhost:3306/practicespr
     username: root
-    password: ivill0080@
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    password:
   #
   jpa:
     defer-datasource-initialization: true
