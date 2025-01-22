@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+<body>
+<div>
+    글 목록<br/><br/>
+
+    <div id="div_notice_list"></div>
+</div>
+</body>
+<script>
+    $(document).ready(()=>{
+        list_notice()
+    });
+
+    function list_notice() {
+        $.ajax({
+            url: "/api/notice/list",
+            type: "GET",
+            cache: false,
+            success: (obj_data, status, xhr) => {
+                $("#div_user_list").html("");
+
+                for(let each of obj_data) {
+                    $("#div_notice_list").append(
+                        "<div><a href='/notice/detail/" + each.id +"'>" + each.id + ". " + each.title + ": " + each.content + "</a></div>"
+                    )
+                }
+            },
+            error: (obj_data, status, xhr) => {
+                alert("error!");
+                alert(JSON.stringify(obj_data));
+            }
+        })
+    }
+</script>
+</html>

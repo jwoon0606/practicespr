@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Detail</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+<body>
+    상세페이지<span id="detail_notice_id"></span><br/>
+    <button onclick="update_notice()">수정</button> <button onclick="delete_notice()">삭제</button>
+    <br/><br/>
+
+    title : <input type="text" id="detail_notice_title"/><br/>
+    content : <input type="text" id="detail_notice_content"/><br/>
+
+    <script>
+        $(document).ready(()=>{
+            detail_notice();
+        })
+
+        let url = window.location.href;
+        let id = url.substring(url.lastIndexOf("/") + 1);
+
+        function detail_notice() {
+            $.ajax({
+                url: '/api/notice',
+                type: "GET",
+                data: {id : id},
+                cache: false,
+                success: (obj_data, status, xhr) => {
+                    $("#detail_notice_id").append(
+                        " (Id: " + obj_data.id + ")"
+                    );
+
+                    let array_key = Object.keys(obj_data);
+
+                    for(let each of array_key) {
+                        $("#detail_notice_"+each).val(obj_data[each]);
+                    }
+                },
+                error: (obj_data, status, xhr) => {
+                    alert("error!");
+                    alert(JSON.stringify(obj_data));
+                }
+            })
+        }
+
+        function update_notice() {
+            let _param = {
+                id: id,
+                title: $("#detail_notice_title").val(),
+                content: $("#detail_notice_content").val()
+            }
+
+            $.ajax({
+                url: '/api/notice',
+                type: 'PUT',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(_param),
+                cache: false,
+                success: (obj_data, status, xhr)=>{
+                    alert("수정 완료");
+                    window.location.href = window.location.href.replace(/detail.*$/,'list');
+                },
+                error: (obj_data, status, xhr)=>{
+                    alert("error!");
+                    alert(JSON.stringify(obj_data));
+                }
+            })
+        }
+
+        function delete_notice() {
+            $.ajax({
+                url: "/api/notice",
+                type: "DELETE",
+                contentType: "application/json; charset=utf-8",
+                data: id,
+                cache: false,
+                success: (obj_data,status,xhr)=>{
+                    alert("삭제 완료");
+                    window.location.href = window.location.href.replace(/detail.*$/,'list');
+                },
+                error: (obj_data,status,xhr)=>{
+                    alert("error!");
+                    alert(JSON.stringify(obj_data));
+                }
+            })
+        }
+    </script>
+</body>
+</html>

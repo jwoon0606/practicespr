@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+</head>
+<body>
+<div>
+    글 작성 페이지 <br/><br/>
+
+    Title : <input type="text" id="create_notice_title"/><br/>
+    Content : <input type="text" id="create_notice_content"/><br/><br/>
+
+    <button onclick="create_notice()">Create</button>
+</div>
+</body>
+<script>
+    function create_notice() {
+        let _param = {
+            title : $("#create_notice_title").val(),
+            content : $("#create_notice_content").val()
+        }
+
+        $.ajax({
+            url: "/api/notice",
+            type: "POST",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(_param),
+            cache: false,
+            success: (obj_data, status, xhr) => {
+                alert("id: " + obj_data);
+                location.reload();
+            },
+            error: (obj_data, status, xhr) => {
+                alert("error!");
+                alert(JSON.stringify(obj_data));
+            }
+        });
+    }
+</script>
+
+</html>
