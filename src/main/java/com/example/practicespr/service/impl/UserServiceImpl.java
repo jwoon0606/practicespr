@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
     public void update(Map<String, Object> params) {
         Long id = Long.parseLong((String) params.get("id"));
         User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("no data"));
-        if(params.get("password") != null) { user.setPassword((String) params.get("password")); }
+        if(params.get("username") != null) { user.setUsername((String) params.get("username")); }
         if(params.get("name") != null) { user.setName((String) params.get("name")); }
         if(params.get("nick") != null) { user.setNick((String) params.get("nick")); }
         if(params.get("phone") != null) { user.setPhone((String) params.get("phone")); }

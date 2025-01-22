@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Detail</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 </head>
 <body>
+<div>
     유저 상세정보<br/><br/>
 
     id : <input id="detail_user_id"/><br/>
@@ -57,10 +59,10 @@
 
         function update_user() {
             let _param = {
-
+                id : tempId
             };
 
-            let arrayKey = ["id","username", "name", "nick", "phone"];
+            let arrayKey = ["username", "name", "nick", "phone"];
             for(let each of arrayKey) {
                 _param[each] = $("#detail_user_" + each).val();
             }
@@ -100,5 +102,6 @@
             });
         }
     </script>
+</div>
 </body>
 </html>
