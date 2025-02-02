@@ -10,9 +10,9 @@ logging:
 spring:
   #
   datasource:
-    url: jdbc:mysql://localhost:3306/practicespr
+    url: jdbc:mysql://localhost:3306/practicespr_db
     username: root
-    password:
+    password: lessonzero
   #
   jpa:
     defer-datasource-initialization: true
