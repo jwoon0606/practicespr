@@ -1,58 +1,80 @@
 package com.example.practicespr.service.impl;
 
 import com.example.practicespr.domain.Notice;
+import com.example.practicespr.dto.NoticeDto;
 import com.example.practicespr.repository.NoticeRepository;
 import com.example.practicespr.service.NoticeService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class NoticeServiceImpl implements NoticeService {
-    private final NoticeRepository noticeRepository;
 
-    public NoticeServiceImpl(NoticeRepository noticeRepository) {
+    private final NoticeRepository noticeRepository;
+    public NoticeServiceImpl(NoticeRepository noticeRepository){
         this.noticeRepository = noticeRepository;
     }
 
     @Override
-    public Long create(Map<String, Object> params) {
-        String title = params.get("title").toString();
-        String content = params.get("content").toString();
-
-        Notice notice = new Notice();
-        notice.setTitle(title);
-        notice.setContent(content);
-
-        noticeRepository.save(notice);
-
-        return notice.getId();  // DB에 생성되는 순간 생성된 id를 자바 Entity 에도 바로 전달되는가?
+    public NoticeDto.CreateResDto create(NoticeDto.CreateReqDto params) {
+        return noticeRepository.save(params.toEntity()).toCreateResDto();
     }
 
     @Override
-    public void update(Map<String, Object> params) {
-        Notice notice = noticeRepository.findById(Long.valueOf(params.get("id").toString())).orElseThrow(()->new RuntimeException("No Notice"));
-        notice.setTitle(params.get("title").toString());
-        notice.setContent(params.get("content").toString());
-
+    public void update(NoticeDto.UpdateReqDto params) {
+        Notice notice = noticeRepository.findById(params.getId()).orElseThrow(() -> new RuntimeException("no data"));
+        if(params.getDeleted() != null){ notice.setDeleted(params.getDeleted()); }
+        if(params.getProcess() != null){ notice.setProcess(params.getProcess()); }
+        if(params.getTitle() != null){ notice.setTitle(params.getTitle()); }
+        if(params.getContent() != null){ notice.setContent(params.getContent()); }
         noticeRepository.save(notice);
     }
 
     @Override
-    public void delete(Long id) {
-        Notice notice = noticeRepository.findById(id).orElseThrow(()->new RuntimeException("No Notice"));
-        noticeRepository.delete(notice);
+    public void delete(NoticeDto.UpdateReqDto params) {
+        params.setDeleted(true);
+        update(params);
     }
 
     @Override
-    public Notice detail(Long id) {
-        return noticeRepository.findById(id).orElseThrow(() -> new RuntimeException("Notice not found"));
-    }
+    public NoticeDto.DetailResDto detail(NoticeDto.DetailReqDto params) {
+        Notice notice = noticeRepository.findById(params.getId())
+                    .orElseThrow(() -> new RuntimeException("no data"));
+
+        return NoticeDto.DetailResDto.builder()
+                .id(notice.getId())
+                .createdAt(notice.getCreatedAt().toString())
+                .modifiedAt(notice.getModifiedAt().toString())
+                .deleted(notice.getDeleted())
+                .process(notice.getProcess())
+                .title(notice.getTitle())
+                .content(notice.getContent())
+                .build();
+        }
 
     @Override
-    public List<Notice> list() {
-        return noticeRepository.findAll();
+    public List<NoticeDto.DetailResDto> list() {
+        List<Notice> notices = noticeRepository.findAll();
+        List<NoticeDto.DetailResDto> result = new ArrayList<>();
+
+        for (Notice notice : notices) {
+            NoticeDto.DetailResDto dto = NoticeDto.DetailResDto.builder()
+                    .id(notice.getId())
+                    .createdAt(notice.getCreatedAt().toString())
+                    .modifiedAt(notice.getModifiedAt().toString())
+                    .deleted(notice.getDeleted())
+                    .process(notice.getProcess())
+                    .title(notice.getTitle())
+                    .content(notice.getContent())
+                    .build();
+            result.add(dto);
+        }
+
+        return result;
     }
 }
