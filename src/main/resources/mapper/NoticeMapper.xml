@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0/EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.thc.winterspr.mapper.NoticeMapper">
+<mapper namespace="com.example.practicespr.mapper.NoticeMapper">
 
 	<!---->
-	<select id="detail" parameterType="hashMap" resultType="com.thc.winterspr.dto.NoticeDto$DetailResDto">
+	<select id="detail" parameterType="hashMap" resultType="com.example.practicespr.dto.NoticeDto$DetailResDto">
 		SELECT notice.id
 			,notice.deleted
 			,notice.process
@@ -15,7 +15,7 @@
 		FROM notice
 		WHERE notice.id = #{id}
 	</select>
-	<select id="list" parameterType="hashMap" resultType="com.thc.winterspr.dto.NoticeDto$DetailResDto">
+	<select id="list" parameterType="hashMap" resultType="com.example.practicespr.dto.NoticeDto$DetailResDto">
 		SELECT notice.id
 		FROM notice
 		WHERE notice.id is not NULL
@@ -33,7 +33,7 @@
 	<if test = "title != null and title !=''">AND notice.title LIKE CONCAT('%', #{title}, '%')</if>
 	-->
 
-	<select id="pagedList" parameterType="hashMap" resultType="com.thc.winterspr.dto.NoticeDto$DetailResDto">
+	<select id="pagedList" parameterType="hashMap" resultType="com.example.practicespr.dto.NoticeDto$DetailResDto">
 		SELECT notice.id
 		FROM notice
 		WHERE notice.id is not NULL
@@ -57,7 +57,7 @@
 		<if test = "orderway =='asc'"> ASC</if>
 	</select>
 
-	<select id="scrollList" parameterType="hashMap" resultType="com.thc.winterspr.dto.NoticeDto$DetailResDto">
+	<select id="scrollList" parameterType="hashMap" resultType="com.example.practicespr.dto.NoticeDto$DetailResDto">
 		SELECT notice.id
 		FROM notice
 		WHERE notice.id is not NULL
